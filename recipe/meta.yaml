@@ -1,16 +1,13 @@
-{% set xorg_name = "xauth" %}
-{% set xorg_category = "app" %}
-{% set name = "xorg-" ~ xorg_name %}
-{% set version = "1.1.4" %}
-{% set sha256 = "e9318141464ad7b4dc0f8564a580f0d20f977c85a388cc40d5a766206151c690" %}
+{% set name = "xorg-xauth" %}
+{% set version = "1.1.5" %}
 
 package:
-  name: {{ name|lower }}
+  name: {{ name }}
   version: {{ version }}
 
 source:
-  url: https://www.x.org/releases/individual/{{ xorg_category }}/{{ xorg_name }}-{{ version }}.tar.xz
-  sha256: {{ sha256 }}
+  url: https://www.x.org/releases/individual/app/{{ name.split('-')[1] }}-{{ version }}.tar.xz
+  sha256: a4000e2f441facebf569026bedecc23ba262cc6927be52070abe0002625cfbe0
 
 build:
   # xorg-libxdmcp, libxcb, libx11, libice aren't available on Windows because their dependencies clash with m2/msys2 and mingw64/ucrt64 toolchains.
@@ -19,35 +16,28 @@ build:
 
 requirements:
   build:
-    - m2-autoconf                  # [win]
-    - m2-automake{{ am_version }}  # [win]
-    - m2-libtool                   # [win]
-    - pkg-config                   # [unix]
-    - m2-pkg-config                # [win]
-    - gnuconfig                    # [unix]
-    - m2-base                      # [win]
-    - make                         # [unix]
-    - m2-make                      # [win]
-    - {{ compiler("c") }}          # [unix]
-    - {{ compiler("m2w64_c") }}    # [win]
-    - autoconf                     # [unix]
-    - automake                     # [unix]
-    - gettext                      # [unix]
-    - libtool                      # [unix]
+    - {{ stdlib('c') }}
+    - {{ compiler('c') }}
+    - pkg-config
+    - gnuconfig
+    - make
+    - autoconf
+    - automake
+    - gettext
+    - libtool
   host:
-    - pthread-stubs
-    - xorg-libx11
-    - xorg-libxau
-    - xorg-libxext
-    - xorg-libxmu
-    - xorg-xtrans
-    - xorg-xorgproto
-    - xorg-util-macros
+    - pthread-stubs ==0.3
+    - xorg-libx11 {{ xorg_libx11 }}
+    - xorg-libxau {{ xorg_libxau }}
+    - xorg-libxext {{ xorg_libxext }}
+    - xorg-libxmu {{ xorg_libxmu }}
+    - xorg-xtrans ==1.6.0
+    - xorg-xorgproto {{ xorg_xorgproto }}
+    - xorg-util-macros ==1.20.2
 
 test:
   commands:
     - 'xauth -h 2>&1 | grep -q "usage:  xauth \[-options ...\] \[command arg ...\]"'          # [unix]
-    - 'xauth -h 2>&1 | findstr /C:"usage:  xauth \[-options ...\] \[command arg ...\]" >nul'  # [win]
 
 about:
   home: https://www.x.org/
@@ -55,6 +45,8 @@ about:
   license_family: MIT
   license_file: COPYING
   summary: X.Org authorization settings program
+  description: |
+    The X.org xauth program
   dev_url: https://gitlab.freedesktop.org/xorg/app/xauth
   doc_url: https://gitlab.freedesktop.org/xorg/app/xauth
 
