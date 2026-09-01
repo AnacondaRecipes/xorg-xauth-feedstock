@@ -46,7 +46,7 @@ about:
   license_file: COPYING
   summary: X.Org authorization settings program
   description: |
-    The X.org xauth program
+    X.Org authorization settings program
   dev_url: https://gitlab.freedesktop.org/xorg/app/xauth
   doc_url: https://gitlab.freedesktop.org/xorg/app/xauth
 
